@@ -33,7 +33,17 @@ RUN chmod +x /entrypoint.sh \
         /var/spool/asterisk
 
 EXPOSE 5160/udp
-EXPOSE 10000-10010/udp
+EXPOSE 10000/udp
+EXPOSE 10001/udp
+EXPOSE 10002/udp
+EXPOSE 10003/udp
+EXPOSE 10004/udp
+EXPOSE 10005/udp
+EXPOSE 10006/udp
+EXPOSE 10007/udp
+EXPOSE 10008/udp
+EXPOSE 10009/udp
+EXPOSE 10010/udp
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD asterisk -rx "core show uptime" >/dev/null 2>&1 || exit 1
