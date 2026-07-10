@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -10,7 +10,6 @@ RUN apt-get update \
         gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-COPY config/asterisk.conf /etc/asterisk/asterisk.conf
 COPY config/extensions.conf /etc/asterisk/extensions.conf
 COPY config/logger.conf /etc/asterisk/logger.conf
 COPY config/modules.conf /etc/asterisk/modules.conf
