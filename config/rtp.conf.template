@@ -1,0 +1,6 @@
+[general]
+rtpstart=10000
+rtpend=10010
+rtpchecksums=yes
+icesupport=no
+strictrtp=yes
