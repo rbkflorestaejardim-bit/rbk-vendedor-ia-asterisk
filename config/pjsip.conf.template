@@ -1,7 +1,8 @@
 [global]
 type=global
 user_agent=RBK-Vendedor-IA-Piloto
-endpoint_identifier_order=username,ip,anonymous
+default_realm=${PUBLIC_IP}
+endpoint_identifier_order=auth_username,username,ip,anonymous
 
 [transport-udp]
 type=transport
@@ -25,6 +26,7 @@ allow=alaw
 auth=7001-auth
 aors=7001-aor
 callerid=Carlos RBK <7001>
+identify_by=auth_username,username
 direct_media=no
 disable_direct_media_on_nat=yes
 force_rport=yes
@@ -43,6 +45,7 @@ type=auth
 auth_type=userpass
 username=7001
 password=${RAMAL_7001_SENHA}
+realm=${PUBLIC_IP}
 
 [7001-aor]
 type=aor
@@ -50,3 +53,6 @@ max_contacts=1
 remove_existing=yes
 qualify_frequency=30
 qualify_timeout=3.0
+default_expiration=300
+minimum_expiration=60
+maximum_expiration=3600
