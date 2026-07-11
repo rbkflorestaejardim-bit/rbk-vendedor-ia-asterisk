@@ -1,8 +1,6 @@
 [global]
 type=global
 user_agent=RBK-Vendedor-IA-Piloto
-default_realm=${PUBLIC_IP}
-endpoint_identifier_order=auth_username,username,ip,anonymous
 
 [transport-udp]
 type=transport
@@ -16,6 +14,8 @@ local_net=172.16.0.0/12
 local_net=192.168.0.0/16
 allow_reload=yes
 
+; Endpoint SIP do Linphone.
+; O ID 7001 coincide com o usuário SIP enviado nos cabeçalhos From/To.
 [7001]
 type=endpoint
 transport=transport-udp
@@ -24,9 +24,8 @@ disallow=all
 allow=ulaw
 allow=alaw
 auth=7001-auth
-aors=7001-aor
+aors=7001
 callerid=Carlos RBK <7001>
-identify_by=auth_username,username
 direct_media=no
 disable_direct_media_on_nat=yes
 force_rport=yes
@@ -40,17 +39,20 @@ allow_subscribe=no
 language=pt_BR
 max_audio_streams=1
 
+; Credencial usada para autenticação recebida.
+; O realm fica sem configuração explícita e o Asterisk usa o padrão "asterisk".
 [7001-auth]
 type=auth
 auth_type=userpass
 username=7001
 password=${RAMAL_7001_SENHA}
-realm=${PUBLIC_IP}
 
-[7001-aor]
+; O nome do AOR precisa coincidir com o usuário do cabeçalho To do REGISTER.
+[7001]
 type=aor
 max_contacts=1
 remove_existing=yes
+remove_unavailable=yes
 qualify_frequency=30
 qualify_timeout=3.0
 default_expiration=300
