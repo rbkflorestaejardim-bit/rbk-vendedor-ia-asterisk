@@ -1,15 +1,51 @@
-FROM python:3.12-slim
+FROM debian:bookworm-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        asterisk \
+        asterisk-core-sounds-en-gsm \
+        ca-certificates \
+        gettext-base \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY config/asterisk.conf /etc/asterisk/asterisk.conf
+COPY config/extensions.conf /etc/asterisk/extensions.conf
+COPY config/logger.conf /etc/asterisk/logger.conf
+COPY config/modules.conf /etc/asterisk/modules.conf
+COPY config/pjsip.conf.template /opt/rbk/templates/pjsip.conf.template
+COPY config/rtp.conf.template /opt/rbk/templates/rtp.conf.template
+COPY entrypoint.sh /entrypoint.sh
 
-COPY app ./app
+RUN chmod +x /entrypoint.sh \
+    && mkdir -p \
+        /opt/rbk/templates \
+        /var/lib/asterisk \
+        /var/log/asterisk \
+        /var/run/asterisk \
+        /var/spool/asterisk \
+    && chown -R asterisk:asterisk \
+        /etc/asterisk \
+        /var/lib/asterisk \
+        /var/log/asterisk \
+        /var/run/asterisk \
+        /var/spool/asterisk
 
-EXPOSE 8000
+EXPOSE 5160/udp
+EXPOSE 10000/udp
+EXPOSE 10001/udp
+EXPOSE 10002/udp
+EXPOSE 10003/udp
+EXPOSE 10004/udp
+EXPOSE 10005/udp
+EXPOSE 10006/udp
+EXPOSE 10007/udp
+EXPOSE 10008/udp
+EXPOSE 10009/udp
+EXPOSE 10010/udp
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD asterisk -rx "core show uptime" >/dev/null 2>&1 || exit 1
+
+ENTRYPOINT ["/entrypoint.sh"]
