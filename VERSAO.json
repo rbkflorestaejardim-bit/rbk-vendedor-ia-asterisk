@@ -1,0 +1,20 @@
+{
+  "pacote": "rbk-vendedor-ia-asterisk-ultima-validada",
+  "estado": "último conjunto de arquivos validado no piloto",
+  "componentes": {
+    "Dockerfile": "1.0.2",
+    "config/pjsip.conf.template": "1.0.4",
+    "config/extensions.conf": "1.4.0"
+  },
+  "ramais": [
+    600,
+    601,
+    602,
+    603,
+    604,
+    605
+  ],
+  "ramal_sip": "7001",
+  "porta_sip_udp": 5160,
+  "rtp_udp": "10000-10010"
+}

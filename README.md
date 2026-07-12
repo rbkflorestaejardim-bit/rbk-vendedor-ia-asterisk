@@ -1,34 +1,45 @@
-# RBK Vendedor IA — Asterisk Piloto
+# RBK Vendedor IA — Asterisk (última configuração validada)
 
-Servidor Asterisk isolado para testar um ramal SIP no Linphone sem custo de operadora.
+Este pacote recompõe o repositório Asterisk no último estado validado no
+piloto do RBK Vendedor IA.
 
-## Ramal inicial
+## Componentes recuperados
+
+- Dockerfile: revisão `1.0.2`
+- `config/pjsip.conf.template`: revisão `1.0.4`
+- `config/extensions.conf`: revisão `1.4.0`
+
+## Ramal SIP
 
 - Usuário: `7001`
+- Contexto: `ramais`
 - Porta SIP: `5160/UDP`
-- Transporte: `UDP`
-- Codecs: `PCMU/ulaw` e `PCMA/alaw`
+- RTP: `10000-10010/UDP`
+- Codecs: `ulaw` e `alaw`
 
-## Testes
+## Ramais de teste
 
-- Disque `600`: teste de eco bidirecional.
-- Disque `601`: atende, reproduz um bip e encerra.
+- `600`: eco local do Asterisk
+- `601`: bip e encerramento
+- `602`: AudioSocket / eco pelo gateway-voz
+- `603`: Groq STT
+- `604`: STT + LLM + Piper TTS
+- `605`: vendedor IA multi-turno com memória, catálogo e persistência
 
 ## Variáveis obrigatórias
 
 ```env
-PUBLIC_IP=IP_PUBLICO_DA_VPS
+PUBLIC_IP=129.121.37.172
 SIP_PORT=5160
-RAMAL_7001_SENHA=SENHA_FORTE_COM_PELO_MENOS_24_CARACTERES
+RAMAL_7001_SENHA=GERAR_UMA_SENHA_FORTE_COM_32_OU_MAIS_CARACTERES
 ```
 
-## Portas UDP que precisam ser publicadas
+## Gateway interno
 
-- `5160` → `5160` — SIP
-- `10000` até `10010` → mesmas portas — RTP
+O `extensions.conf` utiliza:
 
-## Observação
+```text
+rbk-vendedor-ia_gateway-voz:9019
+```
 
-Esta configuração é somente para o piloto. Antes de produção serão adicionados
-TLS/SRTP, bloqueio de tentativas, política de IP, monitoramento e integração do
-motor de voz.
+Não coloque chaves de API ou senhas reais no repositório.
